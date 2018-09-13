@@ -275,4 +275,3 @@ static char const * const keytable[] = {
 	[KEY_F(3)] = "\eOR",
 	[KEY_F(4)] = "\eOS",
 };
-};
