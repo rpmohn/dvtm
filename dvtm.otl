@@ -1,0 +1,199 @@
+Bugs on AIX
+	[dvtm] Command keys in status bar
+		: The attached patch is to display command keypresses in the status
+		: bar while a multiple keypress command is being entered. Almost all
+		: commands in dvtm begin with MOD, so require multiple keypresses.
+		: Command keys are displayed as they are pressed, and appear between
+		: the layout symbol and the status text. The keys are cleared from the
+		: status bar after the final key of a command is pressed, or if the
+		: key combination is not bound to a command. For example, if your MOD
+		: is set to ^G and you are toggling the view of tag 4, it first
+		: displays '^g' after you press MOD, then '^gV' after you press 'V',
+		: and then is cleared after you complete the command by pressing '4'.
+		: Please review.
+		:
+		: Thanks -Ross
+	[dvtm] TERMINFO problem with copymode
+		: Over the weekend, I finally put in the hours to figure out why
+		: dvtm's copymode worked fine at home, but didn't work at all on my
+		: works servers. At work, I use shared UNIX hosts without root access.
+		: I compile with
+		:     PREFIX=~/local
+		: so that I have my own compiled apps and customizations. My dvtm
+		: terminal info files are installed under $PREFIX, and when I'm
+		: running inside dvtm I have set
+		:     TERMINFO=~/local/share/terminfo
+		:
+		: The problem occurs when the child process of vt_forkpty() calls
+		: execvp() to switch to the editor program. The environment variable TERM
+		: is set to dvtm-256color, but TERMINFO is not set. The call to
+		: execvp() is successful, but the editor crashes because it doesn't
+		: understand the TERM. (I tested with vis, vim, and less.) I'm not
+		: sure the best way to fix this so for now I just hardcoded
+		:     setenv("TERMINFO", "~/local/share/terminfo", 1);
+		: after the setenv() line for TERM.
+		:
+		: I thought through some actual solutions, but none seemed to fit. I'd
+		: love to hear some ideas!
+		:
+		: Incidentally, the fprintf(stderr, ...) statement after execvp()
+		: doesn't do anything because stderr doesn't go anywhere meaningful.
+		: The call to execvp() wasn't failing in this case, but I tested forcing
+		: it to fail. I ended up opening a specific file, rather than
+		: stderr, and had fprintf() write directly to it, but that's obviously not a
+		: general solution. The fprintf() should either be fixed or removed.
+		:
+		: Thanks -Ross
+	Copy / Paste broken
+		: Because TERMINFO envvar is not carried through, so the vis app, and
+		: others can't find dvtm-256colors term info and fail.
+	Also,
+		: the fprintf(stderr, "\nexecv() failed..." won't show up anywhere
+		: because stderr is redirected.
+Pending Patches
+	dvtm-0.14-statusbar.diff
+	config.def.h.diff
+		submitted 7/16/15
+	dvtm-0.14-mousetag.diff
+		submitted 6/05/15
+	dvtm-0.14-pertag.diff
+		submitted 5/25/15
+Applied Patches
+	dvtm-mousefix.diff
+		submitted 6/05/15
+	abduco-A.diff
+		submitted 6/02/15
+	config.def.h-TAGKEYS.diff
+		submitted 5/25/15
+Redo all mouse clicks
+	Email the tag_buttons patch, but announce intentions to switch to dwm-like functionality
+	Look at dwm.c > buttonpress() and its config.def.h
+Redo tags as bits
+	Email intentions to switch tags from strings to bits
+	Look at dwm.c and its config.def.h
+BUGS
+	Copy/Paste on AIX
+	Tag 9 on AIX
+Book
+	Installation
+	Running
+	Working with Windows, part 1
+	Layouts
+	Working with Windows, part 2
+		Copy/Paste
+	Tags
+	Mouse
+	Configuration
+		Key Bindings
+			togglerunall - add 0 for consistency, is currently duplicate mapped to view(NULL)
+			killclient - x+x to avoid accidents
+			setlayout([ ]) - o for only, or f for fullscreen
+			setlayout([]=) - = for equal tiles, similar to Vim, or m for master+tiles
+			setmfact("+0.05") - > as in Vim
+			setmfact("-0.05") - < as in Vim
+			incnmaster("+1") - h, and H for ("99")
+			incnmaster("-1") - l, and L for ("1")
+		quit - q+q to avoid accidents
+		Colors
+		Color Rules
+		New commands
+			create("ssh server")
+Reassess the consistency with Vim key bindings
+	Namespaces
+		g
+		z
+		CTRL-W
+			Window commands
+			Tab windows in Vim are somewhat like Tag windows
+		Think about better Namespace keys, such as Vim's g, CTRL-W, others
+		Try namespace CTRL-W for window/layout stuff
+		Try namespace CTRL-T for tag stuff
+	Make tables of all commands for a cheatsheet
+	Window/Client Commands
+		create 'c'
+			vim: n
+		create(,,$CWD) 'C'
+		focusnext 'j'
+			vim: j/l
+		focusprev 'k'
+			vim: k/h
+		zoom '\n', '\r'
+		focusn(1) '1'
+			1-9
+		focuslast '\t'
+		togglerunall 'a'
+		toggleminimize '.'
+		focusnextnm 'J'
+		focusprevnm 'K'
+		scrollback(-1) KEY_PPAGE
+		scrollback(1) KEY_NPAGE
+		killclient 'x'
+			vim: q, c (quit, close)
+			Make 'x'+'x'?
+	Layout Commands
+		setlayout(NULL) ' '
+			vim: w/CTRL+w
+		setlayout(grid) 'g'
+		setlayout(bstack) 'b'
+		setlayout(fullscreen) 'm'
+			vim: o (only)
+			Make 'o' for only?
+		setlayout(tile) 'f'
+			make 'm' for master?
+		setmfact("+0.05") 'l'
+			vim: CTRL-W+ =, >
+			make '>'?
+		setmfact("-0.05") 'h'
+			vim: CTRL-W+ =, <
+			make '<'?
+		incnmaster("+1") 'i'
+			make 'l'?
+		incnmaster("-1") 'd'
+			make 'h'?
+	Copy/Paste Commands
+		copymode(NULL) 'e'
+		copymode("/") '/'
+		paste 'p'
+	Tag Commands
+		view(1) 'v'+'1'
+			1-9
+		toggleview(1) 'V'+1
+			1-9
+		view(NULL) 'v'+'0'
+		viewprevtag 'v'+'\t'
+		tag(1) 't'+'1'
+			1-9
+		toggletag(1) 'T'+1
+			1-9
+		tag(NULL) 't'+'0'
+	Mouse Commands
+		togglemouse 'M'
+		mouse_focus BUTTON1_CLICKED
+		mouse_fullscreen BUTTON1_DOUBLE_CLICKED
+		mouse_zoom BUTTON2_CLICKED
+		mouse_minimize BUTTON3_CLICKED
+	Application & Miscellaneous Commands
+		create("man dvtm") '?'
+		send(MOD) MOD+MOD
+		redraw '^L', 'r'
+		togglebar 's'
+		togglebarpos 'S'
+		quit 'q'
+			make 'q'+'q'
+Analysis
+	Variable Definitions
+		Globals
+			unsigned int seltags;
+				currently selected visible tags
+				but, based on its usage as tagset[seltags], it can only be 0 or 1, right?
+				seltags is not initialized, so it initially equals 0
+				in view() and viewprevtag(), it is toggled, like so
+					seltags ^= 1;
+				so, it always points one or another set of visible tags, the current and the previous!
+			unsigned int tagset[2] = { 1, 1 };
+				Keeps two sets of visible tags, the current and the previous.
+				And, seltags toggles between them!
+		Client
+			bool minimized
+			unsigned int tags;
+				bits indicating which tags it is displayed in
