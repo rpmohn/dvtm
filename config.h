@@ -112,22 +112,22 @@ static KeyBinding bindings[] = {
 	{ { MOD, 'C',          }, { create,         { NULL, NULL, "$CWD" }      } },
 	{ { MOD, 'x', 'x',     }, { killclient,     { NULL }                    } },
 	{ { MOD, 'j',          }, { focusnext,      { NULL }                    } },
-/*	{ { MOD, 'J',          }, { focusdown,      { NULL }                    } },
+	{ { MOD, 'J',          }, { focusdown,      { NULL }                    } },
 	{ { MOD, 'K',          }, { focusup,        { NULL }                    } },
 	{ { MOD, 'H',          }, { focusleft,      { NULL }                    } },
-	{ { MOD, 'L',          }, { focusright,     { NULL }                    } },*/
+	{ { MOD, 'L',          }, { focusright,     { NULL }                    } },
 	{ { MOD, 'k',          }, { focusprev,      { NULL }                    } },
 	{ { MOD, 'f',          }, { setlayout,      { " │├┤ " }                 } },
 	{ { MOD, 'g',          }, { setlayout,      { " ├┼┤ " }                 } },
 	{ { MOD, 'b',          }, { setlayout,      { " ├┬┤ " }                 } },
 	{ { MOD, 'm',          }, { setlayout,      { " │ │ " }                 } },
 	{ { MOD, ' ',          }, { setlayout,      { NULL }                    } },
-	{ { MOD, 'h',          }, { incnmaster,     { "+1" }                    } },
-	{ { MOD, 'l',          }, { incnmaster,     { "-1" }                    } },
-	{ { MOD, 'H',          }, { incnmaster,     { "99" }                    } },
-	{ { MOD, 'L',          }, { incnmaster,     { "1" }                     } },
-	{ { MOD, '<',          }, { setmfact,       { "-0.05" }                 } },
-	{ { MOD, '>',          }, { setmfact,       { "+0.05" }                 } },
+	{ { MOD, 'i',          }, { incnmaster,     { "+1" }                    } },
+	{ { MOD, 'd',          }, { incnmaster,     { "-1" }                    } },
+	{ { MOD, 'I',          }, { incnmaster,     { "99" }                    } },
+	{ { MOD, 'D',          }, { incnmaster,     { "1" }                     } },
+	{ { MOD, 'h',          }, { setmfact,       { "-0.05" }                 } },
+	{ { MOD, 'l',          }, { setmfact,       { "+0.05" }                 } },
 	{ { MOD, '.',          }, { toggleminimize, { NULL }                    } },
 	{ { MOD, 's',          }, { togglebar,      { NULL }                    } },
 	{ { MOD, 'S',          }, { togglebarpos,   { NULL }                    } },
@@ -236,12 +236,9 @@ static const ColorRule colorrules[] = {
 #ifdef CONFIG_MOUSE
 static Button buttons[] = {
 	{ BUTTON1_CLICKED,        { mouse_focus,      { NULL  } } },
-	{ BUTTON1_RELEASED,       { mouse_focus,      { NULL  } } },
 	{ BUTTON1_DOUBLE_CLICKED, { mouse_fullscreen, { "[ ]" } } },
 	{ BUTTON2_CLICKED,        { mouse_zoom,       { NULL  } } },
-	{ BUTTON2_RELEASED,       { mouse_zoom,       { NULL  } } },
 	{ BUTTON3_CLICKED,        { mouse_minimize,   { NULL  } } },
-	{ BUTTON3_RELEASED,       { mouse_minimize,   { NULL  } } },
 };
 
 static Button tag_buttons[] = {
